@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Harness For InVision Challenge</title>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script>
+            window.jQuery || document.write('<script src="../libs/jquery-1.6.2.min.js"><\/script>')
+        </script>
+
+        <!-- Jasmin File -->
+        <link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+        <script type="text/javascript" src="jasmine/jasmine.js"></script>
+        <script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+
+        <!-- Source Files -->
+        <script src="../src/tabui.js"></script>
+
+        <!-- Spec Files -->
+        <script src="tabui-spec.js"></script>
+    </head>
+    <body>
+
+        <script>
+            jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+            jasmine.getEnv().execute();
+        </script>
+    </body>
+</html>
