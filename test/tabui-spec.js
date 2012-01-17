@@ -1,42 +1,57 @@
 describe('tabui', function () {
-    var base
-      , defaultContents = '<div><ul>' +
-            '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
-            '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
-            '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+    var fixture
+      , tabControl
+      , defaultContents = 
+            '<div style="width: 400px; height: 300px;"><ul>' +
+                '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
             '</ul></div>'
-      , multipleSelectedContents = '<div><ul>' +
-            '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
-            '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
-            '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
-            '</ul></div>';
+      , multipleSelectedContents =
+            '<div style="width: 400px; height: 300px;"><ul>' +
+                '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+            '</ul></div>'
+      , generateDefaultFixture = function () { 
+            fixture = $(defaultContents).appendTo('body');
+            tabControl = fixture.tabui();
+        };
 
     afterEach(function () {
-        if (base)
-            base.remove();
-        base = null;
+        if (fixture)
+            fixture.remove();
+        fixture = null;
     });
 
     it('should throw if the target has no ul as a child', function () {
-        base = $('<div></div>').append('body');
+        fixture = $('<div></div>').appendTo('body');
 
-        expect(base.tabui).toThrow(new Error('TabUI expects a ul within the target container.'));
+        expect(function () { fixture.tabui(); }).toThrow(new Error('TabUI expects a ul within the target container.'));
     });
 
     it('should find the immediate child ul within the container', function () {
-        base = $(defaultContents).append('body');
-        var tabControl = base.tabui();
+        generateDefaultFixture();
 
-        expect(tabControl.ul[0]).toBe(base.children('ul')[0]);
+        expect(tabControl.list[0]).toBe(fixture.children('ul')[0]);
+    });
+
+    it('should create a tab per list item', function () {
+        generateDefaultFixture();
+
+        expect(tabControl.tabs.length).toBe(3);
     });
 
     it('should hide all the contents besides the selected one', function () {
-        base = $(defaultContents).append('body');
-        var tabControl = base.tabui()
-          , isSelected
-          , isVisible;
+        generateDefaultFixture();
 
-        for (tab in tabControl.tabs) {
+        var isSelected
+          , isVisible
+          , index
+          , tab;
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
             isSelected = tab.isSelected
             isVisible = tab.body.is(':visible');
 
@@ -45,11 +60,15 @@ describe('tabui', function () {
     });
 
     it('should only allow one selected tab', function () {
-        base = $(multipleSelectedContents).append('body');
-        var tabControl = base.tabui()
-          , numberSelected = 0;
+        fixture = $(multipleSelectedContents).appendTo('body');
 
-        for (tab in tabControl.tabs) {
+        var tabControl = fixture.tabui()
+          , numberSelected = 0
+          , index
+          , tab;
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
             if (tab.isSelected)
                 numberSelected++;
         }
@@ -58,12 +77,16 @@ describe('tabui', function () {
     });
 
     it('should unselect any selected tabs when a new tab is selected', function () {
-        base = $(defaultContents).append('body');
-        var tabControl = base.tabui()
-          , selectedTab
-          , unselectedTab;
+        generateDefaultFixture();
 
-        for (tab in tabControl.tabs) {
+        var selectedTab
+          , unselectedTab
+          , index
+          , tab;
+
+        for (index in tabControl.tabs) {
+            tab = tabControl.tabs[index];
+
             if (tab.isSelected)
                 selectedTab = tab;
             else
@@ -80,12 +103,16 @@ describe('tabui', function () {
     });
 
     it('should change the visible content to match the selected tab', function () {
-        base = $(defaultContents).append('body');
-        var tabControl = base.tabui()
-          , selectedTab
-          , unselectedTab;
+        generateDefaultFixture();
 
-        for (tab in tabControl.tabs) {
+        var selectedTab
+          , unselectedTab
+          , index
+          , tab;
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
+
             if (tab.isSelected)
                 selectedTab = tab;
             else
