@@ -48,7 +48,14 @@
 
         <script src="src/tabui.js"></script>
         <script>
-            var tabControl = $('.tabs').tabui();
+            var options = {
+                tabChangeHandler: function (tab) {
+                    console.log('Tab Selected');
+                    console.log(tab);
+                }
+            },
+
+            tabControl = $('.tabs').tabui(options);
         </script>
     </body>
 </html>
