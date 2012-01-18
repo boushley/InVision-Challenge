@@ -155,6 +155,30 @@ describe('tabui', function () {
 
         unselectedTab.select();
 
+        expect(changeHandler).toHaveBeenCalled();
+    });
+
+    it('should fire the selection changed handler when the active tab changes, with the newly selected tab as an argument', function () {
+        var selectedTab
+          , unselectedTab
+          , index
+          , tab
+          , changeHandler = jasmine.createSpy('changeHandler');
+
+        fixture = $(defaultContents).appendTo('body');
+        tabControl = fixture.tabui({'tabChangeHandler': changeHandler});
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
+
+            if (!tab.isSelected) {
+                unselectedTab = tab;
+                break;
+            }
+        }
+
+        unselectedTab.select();
+
         expect(changeHandler).toHaveBeenCalledWith(unselectedTab);
     });
 
