@@ -1,0 +1,22 @@
+.tabs > div {
+    border: 1px solid black;
+    border-top: 0;
+    padding: 10px;
+}
+
+.tabs ul {
+    margin: 0;
+    padding: 0;
+}
+
+.tabs ul li {
+    list-style: none;
+    border: 1px solid black;
+    padding: 0 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.tabs ul li.selected {
+    border-bottom: 0 solid black;
+}
