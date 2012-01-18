@@ -133,4 +133,54 @@ describe('tabui', function () {
         expect(unselectedTab.isSelected).toBe(true);
         expect(unselectedTab.body.is(':visible')).toBe(true);
     });
+
+    it('should fire the selection changed handler when the active tab changes', function () {
+        var selectedTab
+          , unselectedTab
+          , index
+          , tab
+          , changeHandler = jasmine.createSpy('changeHandler');
+
+        fixture = $(defaultContents).appendTo('body');
+        tabControl = fixture.tabui({'tabChangeHandler': changeHandler});
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
+
+            if (!tab.isSelected) {
+                unselectedTab = tab;
+                break;
+            }
+        }
+
+        unselectedTab.select();
+
+        expect(changeHandler).toHaveBeenCalledWith(unselectedTab);
+    });
+
+    it('should not fire the selection changed handler when the active tab is "selected" again', function () {
+
+        var selectedTab
+          , unselectedTab
+          , index
+          , tab
+          , changeHandler = jasmine.createSpy('changeHandler');
+
+        fixture = $(defaultContents).appendTo('body');
+        tabControl = fixture.tabui({'tabChangeHandler': changeHandler});
+
+        for (index in tabControl.tabs) {
+            var tab = tabControl.tabs[index];
+
+            if (tab.isSelected)
+            {
+                selectedTab = tab;
+                break;
+            }
+        }
+
+        selectedTab.select();
+
+        expect(changeHandler).wasNotCalled();
+    });
 });
