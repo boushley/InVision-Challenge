@@ -24,13 +24,7 @@
 
           , selectHandler = function (e, selectedTab) {
               for (var i in tabs) {
-                  var tab = tabs[i];
-
-                  if (tab === selectedTab) {
-                      tab.processSelect();
-                  } else {
-                      tab.processUnselect();
-                  }
+                  tabs[i].processSelection(tabs[i] === selectedTab);
               }
 
               tabChangeHandler(selectedTab);
@@ -50,7 +44,7 @@
             // Ensure only one tab starts selected
             if (tab.isSelected) {
                 if (isSomethingSelected) {
-                    tab.processUnselect();
+                    tab.processSelection(false);
                 }
                 isSomethingSelected = true;
             }
@@ -69,7 +63,7 @@
 
         // If nothing is selected select the first tab
         if (!isSomethingSelected && tabs.length > 0) {
-            tabs[0].processSelect();
+            tabs[0].processSelection(true);
         }
 
         // Set some styles for the headers
@@ -107,22 +101,15 @@
         header.click(this.select);
 
         // Method to put the tab into the selected state
-        this.processSelect = function () {
-            base.addClass(selectedClass);
-            body.show();
-            this.isSelected = true;
+        this.processSelection = function (selected) {
+            base.toggleClass(selectedClass, selected);
+            body.toggle(selected);
+            this.isSelected = selected;
 
             // Load content via ajax if necessary
-            if (!contentLoaded) {
+            if (selected && !contentLoaded) {
                 loadContent();
             }
-        };
-
-        // Method to put the tab into the unselected state
-        this.processUnselect = function () {
-            base.removeClass(selectedClass);
-            body.hide();
-            this.isSelected = false;
         };
 
         // Setup the styles of the header
