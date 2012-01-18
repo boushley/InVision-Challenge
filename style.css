@@ -18,5 +18,5 @@
 }
 
 .tabs ul li.selected {
-    border-bottom: 0 solid black;
+    border-bottom: 1px solid white;
 }
