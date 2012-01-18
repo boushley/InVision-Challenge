@@ -7,6 +7,12 @@ describe('tabui', function () {
                 '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
                 '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
             '</ul></div>'
+      , noSelectedContents = 
+            '<div style="width: 400px; height: 300px;"><ul>' +
+                '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+                '<li> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
+            '</ul></div>'
       , multipleSelectedContents =
             '<div style="width: 400px; height: 300px;"><ul>' +
                 '<li class="selected"> <h3>Some Tab</h3> <div> <h4>This is my tab content</h4> <p>Some more content</p> <ul><li>child</li></ul> </div> </li>' +
@@ -19,8 +25,9 @@ describe('tabui', function () {
         };
 
     afterEach(function () {
-        if (fixture)
+        if (fixture) {
             fixture.remove();
+        }
         fixture = null;
     });
 
@@ -59,21 +66,63 @@ describe('tabui', function () {
         }
     });
 
-    it('should only allow one selected tab', function () {
-        fixture = $(multipleSelectedContents).appendTo('body');
+    it('should select the tab that has the selected class to start', function () {
+        generateDefaultFixture();
 
-        var tabControl = fixture.tabui()
-          , numberSelected = 0
-          , index
+        var numberSelected = 0
+          , selectedIndex = -1
           , tab;
 
-        for (index in tabControl.tabs) {
-            var tab = tabControl.tabs[index];
-            if (tab.isSelected)
+        for (var i = 0; i < tabControl.tabs.length; i++) {
+            var tab = tabControl.tabs[i];
+            if (tab.isSelected) {
                 numberSelected++;
+                selectedIndex = i;
+            }
         }
 
         expect(numberSelected).toBe(1);
+        expect(selectedIndex).toBe(1);
+    });
+
+    it('should only allow one selected tab', function () {
+        fixture = $(multipleSelectedContents).appendTo('body');
+        tabControl = fixture.tabui();
+
+        var numberSelected = 0
+          , selectedIndex = -1
+          , tab;
+
+        for (var i = 0; i < tabControl.tabs.length; i++) {
+            var tab = tabControl.tabs[i];
+            if (tab.isSelected) {
+                numberSelected++;
+                selectedIndex = i;
+            }
+        }
+
+        expect(numberSelected).toBe(1);
+        expect(selectedIndex).toBe(0);
+    });
+
+    it('should automatically select the first tab if nothing is selected', function () {
+        fixture = $(noSelectedContents).appendTo('body');
+        tabControl = fixture.tabui();
+
+        var numberSelected = 0
+          , selectedIndex = -1
+          , tab;
+
+        for (var i = 0; i < tabControl.tabs.length; i++) {
+            var tab = tabControl.tabs[i];
+            if (tab.isSelected) {
+                numberSelected++;
+                selectedIndex = i;
+            }
+        }
+
+        expect(numberSelected).toBe(1);
+        expect(selectedIndex).toBe(0);
     });
 
     it('should unselect any selected tabs when a new tab is selected', function () {
@@ -87,10 +136,11 @@ describe('tabui', function () {
         for (index in tabControl.tabs) {
             tab = tabControl.tabs[index];
 
-            if (tab.isSelected)
+            if (tab.isSelected) {
                 selectedTab = tab;
-            else
+            } else {
                 unselectedTab = tab;
+            }
         }
 
         expect(selectedTab.isSelected).toBe(true);
@@ -113,10 +163,11 @@ describe('tabui', function () {
         for (index in tabControl.tabs) {
             var tab = tabControl.tabs[index];
 
-            if (tab.isSelected)
+            if (tab.isSelected) {
                 selectedTab = tab;
-            else
+            } else {
                 unselectedTab = tab;
+            }
         }
 
         expect(selectedTab.isSelected).toBe(true);
@@ -196,8 +247,7 @@ describe('tabui', function () {
         for (index in tabControl.tabs) {
             var tab = tabControl.tabs[index];
 
-            if (tab.isSelected)
-            {
+            if (tab.isSelected) {
                 selectedTab = tab;
                 break;
             }
