@@ -1,7 +1,7 @@
 # JavaScript TabUI Control
 
 ## Intro
-This UI control was developed to fulfill the recruiting challenge for InVision.
+This UI control was developed to fulfill the [recruiting challenge](http://bit.ly/front-end-developer-challenge) for InVision.
 
 A running example of this app can be seen as a [jsfiddle here](http://jsfiddle.net/boushley/cYS6U/).
 
