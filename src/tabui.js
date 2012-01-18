@@ -1,14 +1,9 @@
 (function ($, undefined) {
 
-    $.fn.tabui = function (options) {
-        var control = new TabUI.TabControl(this, options);
-        return control;
-    };
-
     window.TabUI = {};
 
     TabUI.TabControl = function (baseElement, options) {
-        // Don't require an optiosn parameter
+        // Don't require an options parameter
         options = options || {};
 
         var base = this.base = $(baseElement)
@@ -40,13 +35,16 @@
               tabChangeHandler(selectedTab);
             }
 
+        // Ensure that we have valid contents
         if (list.length < 1)
             throw new Error(TabUI.INVALID_CONTENTS);
 
+        // Setup each of the tabs
         tabOptions.selectedClass = selectedClass;
         lis.each(function () {
             var tab = new TabUI.Tab(this, tabOptions);
 
+            // Ensure only one tab starts selected
             if (tab.isSelected) {
                 if (isSomethingSelected) {
                     tab.processUnselect();
@@ -113,10 +111,12 @@
 
         // Lets make sure the body is in the correct state
         this.isSelected = base.hasClass(selectedClass);
-        if (this.isSelected)
-            body.show();
-        else
-            body.hide();
+        body.toggle(this.isSelected);
+    };
+
+    $.fn.tabui = function (options) {
+        var control = new TabUI.TabControl(this, options);
+        return control;
     };
 
     TabUI.DEFAULT_TAB_HEIGHT = 25;
