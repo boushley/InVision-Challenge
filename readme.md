@@ -23,3 +23,7 @@ Options can be provided as an extra parameter to either of these methods. The op
 * tabChangeHandler: A function to be called when the active tab changes
 * tabHeight: The height to make the tabs
 * selectedClass: The class to apply to the tabs when they are selected
+
+## Cross-Browser Disclaimer
+This implementation has been tested in Chrome(17.0.963.33) and Firefox(9.0.1) on Mac. It makes use of border-radius
+without any vendor prefixes, and thus will only work in modern/up-to-date browsers.
