@@ -38,7 +38,7 @@
                 </li>
                 <li>
                     <h3>Some Other Tab 3</h3>
-                    <div>
+                    <div data-content-url="ajax-loaded-content.html">
                         <h4>This is my other tab 3 contents</h4>
                         <p>Some more other content</p>
                     </div>
@@ -52,7 +52,8 @@
                 tabChangeHandler: function (tab) {
                     console.log('Tab Selected');
                     console.log(tab);
-                }
+                },
+                eagerLoadContent: true
             },
 
             tabControl = $('.tabs').tabui(options);

@@ -26,21 +26,24 @@
               for (var i in tabs) {
                   var tab = tabs[i];
 
-                  if (tab === selectedTab)
+                  if (tab === selectedTab) {
                       tab.processSelect();
-                  else
+                  } else {
                       tab.processUnselect();
+                  }
               }
 
               tabChangeHandler(selectedTab);
             }
 
         // Ensure that we have valid contents
-        if (list.length < 1)
+        if (list.length < 1) {
             throw new Error(TabUI.INVALID_CONTENTS);
+        }
 
         // Setup each of the tabs
         tabOptions.selectedClass = selectedClass;
+        tabOptions.eagerLoadContent = options.eagerLoadContent || false;
         lis.each(function () {
             var tab = new TabUI.Tab(this, tabOptions);
 
@@ -65,8 +68,9 @@
         });
 
         // If nothing is selected select the first tab
-        if (!isSomethingSelected && tabs.length > 0)
+        if (!isSomethingSelected && tabs.length > 0) {
             tabs[0].processSelect();
+        }
 
         // Set some styles for the headers
         TabUI.Util.setDimensions(list, width, tabHeight);
@@ -82,12 +86,22 @@
           , body = this.body = base.children('div')
           , header = this.header = base.children('h1,h2,h3,h4,h5,h6')
           , selectedClass = options.selectedClass
-          , self = this;
+          , self = this
+
+          , contentUrl = body.attr('data-content-url')
+          , contentLoaded = false
+          , loadContent = function () {
+                  if (contentUrl) {
+                      body.load(contentUrl);
+                  }
+                  contentLoaded = true;
+              };
 
         // Setup the selection methods
         this.select = function () {
-            if (!self.isSelected)
+            if (!self.isSelected) {
                 base.trigger(TabUI.SELECT_EVENT, self);
+            }
         };
         base.click(this.select);
         header.click(this.select);
@@ -97,6 +111,11 @@
             base.addClass(selectedClass);
             body.show();
             this.isSelected = true;
+
+            // Load content via ajax if necessary
+            if (!contentLoaded) {
+                loadContent();
+            }
         };
 
         // Method to put the tab into the unselected state
@@ -112,6 +131,11 @@
         // Lets make sure the body is in the correct state
         this.isSelected = base.hasClass(selectedClass);
         body.toggle(this.isSelected);
+
+        // Load content via ajax if necessary
+        if (options.eagerLoadContent) {
+            loadContent();
+        }
     };
 
     $.fn.tabui = function (options) {
@@ -131,11 +155,13 @@
         element.width(width).height(height);
 
         extraDimension = element.outerWidth(true) - width;
-        if (extraDimension)
+        if (extraDimension) {
             element.width(width - extraDimension);
+        }
         extraDimension = element.outerHeight(true) - height;
-        if (extraDimension)
+        if (extraDimension) {
             element.height(height - extraDimension);
+        }
     };
 
 })(jQuery)
