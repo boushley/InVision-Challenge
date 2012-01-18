@@ -8,8 +8,8 @@
 
         var base = this.base = $(baseElement)
           , list = this.list = this.base.children('ul,ol')
-          , tabs = this.tabs = []
           , lis = list.children('li')
+          , tabs = this.tabs = []
 
           , width = base.width()
           , height = base.height()
@@ -39,7 +39,8 @@
         tabOptions.selectedClass = selectedClass;
         tabOptions.eagerLoadContent = options.eagerLoadContent || false;
         lis.each(function () {
-            var tab = new TabUI.Tab(this, tabOptions);
+            var tab = new TabUI.Tab(this, tabOptions)
+              , $this = $(this);
 
             // Ensure only one tab starts selected
             if (tab.isSelected) {
@@ -54,8 +55,10 @@
             tab.body.remove();
             base.append(tab.body);
 
-            // Set the width and height, and compensate for padding/border
+            // Setup the width, height and other styles
             TabUI.Util.setDimensions(tab.body, width, height);
+            TabUI.Util.setDimensions($this, tabWidth, tabHeight);
+            $this.css({'float': 'left'});
 
             // Save this tab to our list
             tabs.push(tab);
@@ -68,11 +71,6 @@
 
         // Set some styles for the headers
         TabUI.Util.setDimensions(list, width, tabHeight);
-        lis.each(function () {
-            $this = $(this);
-            TabUI.Util.setDimensions($this, tabWidth, tabHeight);
-            $this.css({'float': 'left'});
-        });
     };
 
     TabUI.Tab = function (baseElement, options) {
