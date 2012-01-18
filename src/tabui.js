@@ -7,7 +7,7 @@
         options = options || {};
 
         var base = this.base = $(baseElement)
-          , list = this.list = this.base.children('ul')
+          , list = this.list = this.base.children('ul,ol')
           , tabs = this.tabs = []
           , lis = list.children('li')
 
